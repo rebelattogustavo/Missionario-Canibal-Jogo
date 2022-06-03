@@ -10,6 +10,7 @@ public class Main {
     static boolean lado = false;
     static int[][] barco = new int[1][2];
     public static void main(String[] args) throws Exception{
+        System.out.println("BEM VINDO AO JOGO DOS MISSIONÁRIOS E CANIBAIS");
         setaPersonagens();
         menu();
     }
@@ -20,23 +21,34 @@ public class Main {
         }if(listaCanLadoEsquerdo.size() > listaMisLadoEsquerdo.size() && listaMisLadoEsquerdo.size()!=0){
             throw new PerdeuException();
         }if((listaMisLadoEsquerdo.size() + listaCanLadoEsquerdo.size()) == 6){
+            for(int i = 0; i < listaMisLadoEsquerdo.size();i++){
+                listaMisLadoEsquerdo.remove(i);
+                listaCanLadoEsquerdo.remove(i);
+            }
             throw new GanhouException();
         }
         System.out.println("Informe o que você deseja fazer" +
                 "\n1- Colocar uma pessoa no barco" +
                 "\n2- Retirar uma pessoa do barco" +
-                "\n3- Levar o barco ao outro lado");
+                "\n3- Levar o barco ao outro lado" +
+                "\n4- Parar de jogar");
         int opcao = tec.nextInt();
         try{
             switchzada(opcao);
         }catch(Exception erro){
-            System.out.println("Deu ruim\n"
+            System.out.println("\n"
                     + erro.getClass().getSimpleName() + ": "
-                    + erro.getMessage());
+                    + erro.getMessage() + "\n");
+            if(erro.getClass().getSimpleName() != "PerdeuException"){
+                menu();
+            }
         }
     }
 
     public static void switchzada(int opcao) throws Exception {
+        if (opcao> 4){
+            throw new OpcaoInvalida();
+        }
         switch (opcao){
             case 1:
                 coloca();
@@ -49,22 +61,33 @@ public class Main {
             case 3:
                 leva();
                 menu();
+            case 4:
+                System.exit(0);
+                break;
         }
     }
 
-    private static void coloca() throws BarcoCheio {
+    private static void coloca() throws BarcoCheio, OpcaoInvalida {
         if((barco[0][0] + barco[0][1]) < 2){
             int opcaoPerso = select("colocar no barco");
             switch(opcaoPerso){
                 case 1:
                     System.out.println("Informe quantos missionário você deseja: ");
                     int opcao = tec.nextInt();
-                    barco[0][1] = opcao;
+                    if(opcao > 2){
+                        throw new OpcaoInvalida();
+                    }else{
+                        barco[0][1] = opcao;
+                    }
                     break;
                 case 2:
                     System.out.println("Informe quantos canibais você deseja: ");
                     opcao = tec.nextInt();
-                    barco[0][0] = opcao;
+                    if(opcao > 2){
+                        throw new OpcaoInvalida();
+                    }else{
+                        barco[0][0] = opcao;
+                    }
                     break;
             }
         }else{
@@ -83,7 +106,7 @@ public class Main {
                         throw new OpcaoInvalida();
                     }
                     if (opcao > barco[0][1]){
-                        System.out.println("Quantidade maior do que há no barco!");
+                        throw new OpcaoInvalida();
                     }else {
                         barco[0][1] = barco[0][1] - opcao;
                     }
@@ -92,18 +115,21 @@ public class Main {
                     System.out.println("Informe quantos canibais você deseja: ");
                     opcao = tec.nextInt();
                     if (opcao > barco[0][0]){
-                        System.out.println("Quantidade maior do que há no barco!");
+                        throw new OpcaoInvalida();
                     }else {
                         barco[0][0] = barco[0][0] - opcao;
                     }
                     break;
             }
         }else {
-
+            throw new BarcoVazio();
         }
     }
 
-    private static void leva(){
+    private static void leva() throws BarcoVazio {
+        if((barco[0][1] + barco[0][0]) < 1){
+            throw new BarcoVazio();
+        }
         System.out.println(lado);
         if(lado == false){
             if(barco[0][1]>0){
@@ -146,10 +172,10 @@ public class Main {
         }
         barco[0][0] = 0;
         barco[0][1] = 0;
-        System.out.println("Missionários no lado direito: " + listaMisLadoDireito.size());
+        System.out.println("\nMissionários no lado direito: " + listaMisLadoDireito.size());
         System.out.println("Missionários no lado esquerdo: " + listaMisLadoEsquerdo.size());
         System.out.println("Canibais no lado direito: " + listaCanLadoDireito.size());
-        System.out.println("Canibais no lado esquerdo: " + listaCanLadoEsquerdo.size());
+        System.out.println("Canibais no lado esquerdo: " + listaCanLadoEsquerdo.size() + "\n");
 
     }
 

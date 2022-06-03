@@ -1,5 +1,5 @@
 public class OpcaoInvalida extends Exception{
     public OpcaoInvalida() {
-        super("Não cabe tudo isso no barco... SEU BURRO");
+        super("Opção inválida... SEU BURRO INFORMA DIREITO");
     }
 }
