@@ -52,7 +52,7 @@ public class Main {
         }
     }
 
-    private static void coloca(){
+    private static void coloca() throws BarcoCheio {
         if((barco[0][0] + barco[0][1]) < 2){
             int opcaoPerso = select("colocar no barco");
             switch(opcaoPerso){
@@ -68,17 +68,20 @@ public class Main {
                     break;
             }
         }else{
-            System.out.println("Barco lotado! Retire alguém");
+            throw new BarcoCheio();
         }
     }
 
-    private static void retira(){
+    private static void retira() throws Exception {
         if((barco[0][0] + barco[0][1]) > 0){
             int opcaoPerso = select("retirar do barco");
             switch (opcaoPerso){
                 case 1:
-                    System.out.println("Informe quantos missionário você deseja: ");
+                    System.out.println("Informe quantos missionários você deseja: ");
                     int opcao = tec.nextInt();
+                    if(opcao > 2){
+                        throw new OpcaoInvalida();
+                    }
                     if (opcao > barco[0][1]){
                         System.out.println("Quantidade maior do que há no barco!");
                     }else {
@@ -96,7 +99,7 @@ public class Main {
                     break;
             }
         }else {
-            System.out.println("Não há ninguém no barco :(");
+
         }
     }
 
